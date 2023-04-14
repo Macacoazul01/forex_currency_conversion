@@ -1,3 +1,10 @@
+## 0.8.0
+ - Fixed `getCurrencyConverted` function errors.
+ - Added `getRunNotifier`: get the ValueNotifier of the currency list update, to listen when the function starts/stops downloading data.
+ - Added `getRunStatus`: get the current status of the currency list update. `true` if it's still donwloading data.
+ - Added `getErrorNotifier`: get the ValueNotifier of the currency list update result, to listen if the function ended or not in an error.
+ - Added `getRunError`: check if the latest call to the currency list update function ended in an error. `null` if everything went ok.
+
 ## 0.7.1
  - Added `blockIfUpdateError` parameter to functions to avoid refreshing currencies if there was a previous error. Default = `false`
 

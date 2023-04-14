@@ -56,6 +56,25 @@ You can initialize the class already looking for the currency prices (use this o
   final fx = Forex(initializeOnCreation: true);
 ```
 
+## Listen to currency list update and result
+
+You can check the currency list update status and if there was an error during the call to the API:
+
+```dart
+  final fx = Forex();
+  //get the ValueNotifier of the currency list update, to listen when the function starts/stops downloading data.
+  ValueNotifier<bool> fx.getRunNotifier;
+
+  //get the current status of the currency list update. `true` if it's still donwloading data.
+  bool fx.getRunStatus;
+
+  ///get the ValueNotifier of the currency list update result, to listen if the function ended or not in an error.
+  ValueNotifier<String?> fx.getErrorNotifier;
+
+  //check if the latest call to the currency list update function ended in an error. `null` if everything went ok.
+  String? fx.getRunError;
+```
+
 ## Additional information
 
 This package uses real-time currency rates from a third-party prices provider convertmymoney.com. The forex prices are bound to their terms and conditions.

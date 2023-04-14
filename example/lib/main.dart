@@ -14,9 +14,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _loading = false;
-  final fx = Forex();
+  final fx = Forex(initializeOnCreation: true);
 
   Future<void> testCurrency() async {
+    print('Run Status');
+    print(fx.getRunStatus);
     loadingState();
     final Map<String, double> allPrices = await fx.getAllCurrenciesPrices();
     print("Exchange rate of PKR: ${allPrices['PKR']}");
@@ -31,6 +33,8 @@ class _MyAppState extends State<MyApp> {
     print("252.5 USD in PKR: $myPriceInPKR");
     print(
         "Default exchange rate (USD - BRL): ${await fx.getCurrencyConverted()}");
+    print('Error check');
+    print(fx.getRunError);
     loadingState();
   }
 
@@ -38,6 +42,17 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _loading = !_loading;
     });
+  }
+
+  printRunStatus() async {
+    print('Run Status');
+    print(fx.getRunStatus);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    printRunStatus();
   }
 
   @override
