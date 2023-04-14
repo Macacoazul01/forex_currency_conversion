@@ -1,3 +1,6 @@
+## 0.7.1
+ - Added `blockIfUpdateError` parameter to functions to avoid refreshing currencies if there was a previous error. Default = `false`
+
 ## 0.7.0
  - Improve docs
  - Added `updateError` getter to help checking if there was an error when trying to get the currencies.

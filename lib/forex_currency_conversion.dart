@@ -10,14 +10,18 @@ import '/extensions.dart';
 class Forex {
   ///default currency used as source value reference of the conversions. This value will be used if none is defined when calling the class functions.
   final String defaultSourceCurrency;
+
   ///default currency used as destination value reference of the conversions. This value will be used if none is defined when calling the class functions.
   final String defaultDestinationCurrency;
+
   ///default number of decimals to be returned on the currency values and conversions. This value will be used if none is defined when calling the class functions.
   final int defaultNumberOfDecimals;
+
   ///force the code to already check the currency values/codes on initialization. Note that, as this is calls an async unawaited function, you'll need to wait some time before using the list of currencies.
   final bool initializeOnCreation;
   Map<String, dynamic> _rates = {};
   List<String> _keys = [];
+
   ///parameter to expose if the currency list of values update went ok.
   String? updateError;
 
@@ -56,21 +60,25 @@ class Forex {
   }
 
   /// resets currencies list.
-  Future<String?> updatePrices() async {
-    await _fetchCurrencies();
+  Future<String?> updatePrices({bool blockIfUpdateError = false}) async {
+    if (!(blockIfUpdateError && updateError != null)) {
+      await _fetchCurrencies();
+    }
     return updateError;
   }
 
   /// converts amount from one currency into another using current forex prices.
-  Future<double> getCurrencyConverted({
-    String? sourceCurrency,
-    String? destinationCurrency,
-    double sourceAmount = 1,
-    int? numberOfDecimals,
-  }) async {
-    await _checkCurrenciesList();
-    if (updateError != null) {
-      return 0;
+  Future<double> getCurrencyConverted(
+      {String? sourceCurrency,
+      String? destinationCurrency,
+      double sourceAmount = 1,
+      int? numberOfDecimals,
+      bool blockIfUpdateError = false}) async {
+    if (!(blockIfUpdateError && updateError != null)) {
+      await _checkCurrenciesList();
+      if (updateError != null) {
+        return 0;
+      }
     }
     final String localSourceCurrency = sourceCurrency ?? defaultSourceCurrency;
     final String localDestinationCurrency =
@@ -88,14 +96,16 @@ class Forex {
         sourceAmount / _rates[localSourceCurrency];
     return (totalDollarsOfSourceCurrency * _rates[localDestinationCurrency])
         .toPrecision(numberOfDecimals ?? defaultNumberOfDecimals);
-    //TODO add error return
+    //TODO add error
+    //TODO remove exceptions
   }
 
   /// returns a Map containing prices of all currencies with their currency_code as key.
-  Future<Map<String, double>> getAllCurrenciesPrices({
-    int? numberOfDecimals,
-  }) async {
-    await _checkCurrenciesList();
+  Future<Map<String, double>> getAllCurrenciesPrices(
+      {int? numberOfDecimals, bool blockIfUpdateError = false}) async {
+    if (!(blockIfUpdateError && updateError != null)) {
+      await _checkCurrenciesList();
+    }
     final Map<String, double> result = <String, double>{};
     final int decimals = numberOfDecimals ?? defaultNumberOfDecimals;
     for (final element in _keys) {
@@ -107,8 +117,11 @@ class Forex {
   }
 
   /// returns a list of all supported currencies.
-  Future<List<String>> getAvailableCurrencies() async {
-    await _checkCurrenciesList();
+  Future<List<String>> getAvailableCurrencies(
+      {bool blockIfUpdateError = false}) async {
+    if (!(blockIfUpdateError && updateError != null)) {
+      await _checkCurrenciesList();
+    }
     return _keys;
     //TODO add error return
   }
