@@ -1,25 +1,40 @@
 library forex_currency_conversion;
 
+import 'dart:async';
+
 import 'package:http/http.dart';
 import 'dart:convert';
 import '/extensions.dart';
 
 /// A Calculator.
 class Forex {
+  ///default currency used as source value reference of the conversions. This value will be used if none is defined when calling the class functions.
   final String defaultSourceCurrency;
+  ///default currency used as destination value reference of the conversions. This value will be used if none is defined when calling the class functions.
   final String defaultDestinationCurrency;
+  ///default number of decimals to be returned on the currency values and conversions. This value will be used if none is defined when calling the class functions.
   final int defaultNumberOfDecimals;
+  ///force the code to already check the currency values/codes on initialization. Note that, as this is calls an async unawaited function, you'll need to wait some time before using the list of currencies.
+  final bool initializeOnCreation;
   Map<String, dynamic> _rates = {};
   List<String> _keys = [];
+  ///parameter to expose if the currency list of values update went ok.
+  String? updateError;
 
   Forex({
     this.defaultSourceCurrency = 'USD',
     this.defaultDestinationCurrency = 'BRL',
     this.defaultNumberOfDecimals = 2,
-  });
+    this.initializeOnCreation = false,
+  }) {
+    if (initializeOnCreation) {
+      //TODO add listener to check when this finishes
+      unawaited(_fetchCurrencies());
+    }
+  }
 
   /// function that fetches all avaliable currencies from API.
-  Future<String?> _fetchCurrencies() async {
+  Future<void> _fetchCurrencies() async {
     final Uri baseUri = Uri.parse('http://www.convertmymoney.com/rates.json');
     try {
       final Response response = await get(baseUri);
@@ -27,23 +42,23 @@ class Forex {
           json.decode(response.body) as Map<String, dynamic>;
       _rates = jsonResponse.remove("rates") as Map<String, dynamic>;
       _keys = _rates.keys.toList();
-      return null;
+      updateError = null;
     } catch (e) {
-      return e.toString();
+      updateError = e.toString();
     }
   }
 
   /// checks if the currencies list is empty. If yes, calls _fetchCurrencies().
-  Future<String?> _checkCurrenciesList() async {
+  Future<void> _checkCurrenciesList() async {
     if (_rates.isEmpty) {
-      return await _fetchCurrencies();
+      await _fetchCurrencies();
     }
-    return null;
   }
 
   /// resets currencies list.
   Future<String?> updatePrices() async {
-    return await _fetchCurrencies();
+    await _fetchCurrencies();
+    return updateError;
   }
 
   /// converts amount from one currency into another using current forex prices.
@@ -53,8 +68,8 @@ class Forex {
     double sourceAmount = 1,
     int? numberOfDecimals,
   }) async {
-    final String? result = await _checkCurrenciesList();
-    if (result != null) {
+    await _checkCurrenciesList();
+    if (updateError != null) {
       return 0;
     }
     final String localSourceCurrency = sourceCurrency ?? defaultSourceCurrency;
@@ -73,6 +88,7 @@ class Forex {
         sourceAmount / _rates[localSourceCurrency];
     return (totalDollarsOfSourceCurrency * _rates[localDestinationCurrency])
         .toPrecision(numberOfDecimals ?? defaultNumberOfDecimals);
+    //TODO add error return
   }
 
   /// returns a Map containing prices of all currencies with their currency_code as key.
@@ -87,11 +103,13 @@ class Forex {
           double.parse(_rates[element].toString()).toPrecision(decimals);
     }
     return result;
+    //TODO add error return
   }
 
   /// returns a list of all supported currencies.
   Future<List<String>> getAvailableCurrencies() async {
     await _checkCurrenciesList();
     return _keys;
+    //TODO add error return
   }
 }

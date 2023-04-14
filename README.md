@@ -50,6 +50,12 @@ You can initialize the class with default values for source and destination curr
   final fx = Forex(defaultDestinationCurrency: 'PKR', defaultSourceCurrency: 'EUR', defaultNumberOfDecimals: 1);
 ```
 
+You can initialize the class already looking for the currency prices (use this only if you don't pretend to use the prices right after the initialization, as this is an async unawaited method):
+
+```dart
+  final fx = Forex(initializeOnCreation: true);
+```
+
 ## Additional information
 
 This package uses real-time currency rates from a third-party prices provider convertmymoney.com. The forex prices are bound to their terms and conditions.

@@ -1,3 +1,8 @@
+## 0.7.0
+ - Improve docs
+ - Added `updateError` getter to help checking if there was an error when trying to get the currencies.
+ - Added `initializeOnCreation` to let the user initialize the class already searching for the updated prices.
+
 ## 0.6.5+1
  - Readme update.
 
