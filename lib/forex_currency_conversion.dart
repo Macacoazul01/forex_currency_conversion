@@ -101,12 +101,12 @@ class Forex {
     if (!_keys.contains(localSourceCurrency)) {
       _errorNotifier.value ??=
           "Source Currency provided was not found. Please Use ISO-4217 currency codes only.";
-      return 0;
+      return 1;
     }
     if (!_keys.contains(localDestinationCurrency)) {
       _errorNotifier.value ??=
           "Destination Currency provided was not found. Please Use ISO-4217 currency codes only.";
-      return 0;
+      return 1;
     }
     final double totalDollarsOfSourceCurrency =
         sourceAmount / _rates[localSourceCurrency];

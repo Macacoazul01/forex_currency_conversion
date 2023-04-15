@@ -1,3 +1,6 @@
+## 0.8.1
+ - Changed default error value to 1.
+
 ## 0.8.0
  - Fixed `getCurrencyConverted` function errors.
  - Added `getRunNotifier`: get the ValueNotifier of the currency list update, to listen when the function starts/stops downloading data.
