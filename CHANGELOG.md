@@ -1,3 +1,6 @@
+## 0.8.2
+ - Updated dart and html.
+
 ## 0.8.1
  - Changed default error value to 1.
 
