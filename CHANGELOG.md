@@ -1,3 +1,6 @@
+## 0.9.0
+ - Updated to dart 3.
+
 ## 0.8.2
  - Updated dart and html.
 
