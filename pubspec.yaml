@@ -1,6 +1,6 @@
 name: forex_currency_conversion
 description: A Flutter Package for real-time forex prices and conversions.
-version: 0.9.0
+version: 0.9.1
 repository: https://github.com/Macacoazul01/forex_currency_conversion
 
 environment:
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.6
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:

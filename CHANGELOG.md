@@ -1,3 +1,6 @@
+## 0.9.1
+ - Updated html dependency.
+
 ## 0.9.0
  - Updated to dart 3.
 
